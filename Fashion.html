@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Foodie Delight - Order Your Favorite Food</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
+  <style>
+    /* Reset and base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #fff8f0;
+      color: #4b3b2b;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin: 20px 0 40px;
+      font-weight: 700;
+      font-size: 2.8rem;
+      color: #d9480f;
+      text-align: center;
+    }
+
+    main {
+      max-width: 1200px;
+      width: 100%;
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Food cards container */
+    .food-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 25px;
+      flex: 3 1 0;
+    }
+
+    /* Individual food item card */
+    .food-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(217, 72, 15, 0.25);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .food-card:hover,
+    .food-card:focus-within {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px rgba(217, 72, 15, 0.4);
+      outline: none;
+    }
+
+    .food-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 3px solid #d9480f;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .food-content {
+      padding: 15px 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .food-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #bc360a;
+    }
+
+    .food-content p {
+      flex-grow: 1;
+      font-size: 0.95rem;
+      color: #6b4c2f;
+      margin-bottom: 15px;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #d9480f;
+      margin-bottom: 12px;
+    }
+
+    /* Add to cart button */
+    .btn-add {
+      background-color: #d9480f;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(217, 72, 15, 0.4);
+    }
+
+    .btn-add:hover,
+    .btn-add:focus {
+      background-color: #bc360a;
+      outline: none;
+      box-shadow: 0 6px 15px rgba(188, 54, 10, 0.7);
+    }
+
+    /* Cart container */
+    .cart {
+      flex: 1 1 320px;
+      background: #fff3e6;
+      border: 2px solid #d9480f;
+      border-radius: 12px;
+      padding: 20px;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+      display: flex;
+      flex-direction: column;
+      max-height: 600px; /* Constrain height of the full cart */
+  overflow: hidden;  /* Hide any overflow beyond this */
+    }
+.cart-items::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cart-items::-webkit-scrollbar-thumb {
+  background-color: #d9480f;
+  border-radius: 10px;
+}
+    .cart h2 {
+      color: #d9480f;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .cart-items {
+      list-style: none;
+      flex-grow: 1;
+      overflow-y: auto;
+       max-height: 100px; /* Allow scrolling for long cart lists */
+  overflow-y: auto;
+  margin-bottom: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      border-bottom: 1px dashed #d9480f;
+      padding-bottom: 9px;
+      font-size: 1rem;
+      color: #5a3a10;
+       list-style: none;
+    }
+
+    .cart-item span {
+      font-weight: 600;
+    }
+    .home:hover{
+    transform: translateY(-1.5px);
+      cursor: pointer;
+      box-shadow: #d9480f;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .home {
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      margin-top: 5px;
+      margin-left: -795px;
+      width: 55px;
+      border-radius: 10px;
+      margin-top: 10px;
+     color:white;
+    background-color: #d9480f;
+    padding: 3px;
+    margin-bottom: 20px;
+    }
+
+    .cart-total {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #bc360a;
+      text-align: right;
+      margin-bottom: 15px;
+    }
+
+    .btn-clear {
+      background-color: #bc360a;
+      color: white;
+      border: none;
+      font-weight: 600;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      align-self: center;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(188, 54, 10, 0.6);
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-clear:hover,
+    .btn-clear:focus {
+      background-color: #a73707;
+      outline: none;
+      box-shadow: 0 6px 18px rgba(167, 55, 7, 0.8);
+    }
+
+    /* Scrollbar for cart items */
+    .cart-items::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    .cart-items::-webkit-scrollbar-thumb {
+      background: #d9480f;
+      border-radius: 10px;
+       max-height: 100px; 
+        overflow-y: auto;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .div-cart {
+           width: 550px;
+  margin-left: 650px;
+  margin-top: -150px;
+  padding-left: 150px;
+  padding-bottom: 10px;
+  /* Remove height constraint from container */
+     
+    }
+    .foodie{
+     font-family:'Courier New', Courier, monospace;
+    font-style: italic;
+    font-size: 70px;
+    padding-right: 350px;
+    }
+  /* ✅ Background video */
+  #bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.35; /* Subtle effect */
+    pointer-events: none;
+  }
+    /* Responsive adjustments */
+    @media (max-width: 950px) {
+      main {
+        flex-direction: column;
+        align-items: center;
+      }
+      .cart {
+        position: static;
+        max-width: 100%;
+        margin-top: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <video id="bg-video" autoplay muted loop playsinline>
+  <source src="Bg vid.mp4.mp4" type="video/mp4" />
+  Your browser does not support HTML5 video.
+</video>
+
+  <h1 class="foodie">FASHION</h1>
+  <div class="div-cart">
+  <aside class="cart" aria-label="Shopping cart">
+    <h2>Your Cart</h2>
+    <ul class="cart-items" aria-live="polite" aria-relevant="additions removals" aria-atomic="true">
+      <li>Your cart is empty.</li>
+    </ul>
+    <div class="cart-total" aria-live="polite" aria-atomic="true">Total: $0.00</div>
+    <button class="btn-clear" aria-label="Clear cart">Clear Cart</button>
+  </aside>
+<a class="home" href="LANDING PAGE.html">Home</a>
+
+
+</div>
+
+
+
+  <main>
+    
+    <!-- Food items container -->
+    <section class="food-container" aria-label="Available food items">
+      <!-- Food item card template -->
+      <article class="food-card" tabindex="0">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80" alt="Delicious pepperoni pizza" />
+        <div class="food-content">
+          <h3>Pepperoni Pizza</h3>
+          <p>Classic pizza topped with pepperoni, melted cheese, and savory tomato sauce.</p>
+          <div class="price">$12.99</div>
+          <button class="btn-add" aria-label="Add Pepperoni Pizza to cart">Add to Cart</button>
+        </div>
+      </article>
+
+      <article class="food-card" tabindex="0">
+        <img src="https://assets.bonappetit.com/photos/624215f8a76f02a99b29518f/16:9/w_4191,h_2357,c_limit/0328-ceasar-salad-lede.jpg" alt="Fresh Caesar Salad" />
+        <div class="food-content">
+          <h3>Caesar Salad</h3>
+          <p>Crisp romaine lettuce tossed with Caesar dressing, croutons and parmesan cheese.</p>
+          <div class="price">$8.49</div>
+          <button class="btn-add" aria-label="Add Caesar Salad to cart">Add to Cart</button>
+        </div>
+      </article>
+
+      <article class="food-card" tabindex="0">
+        <img src="https://friendlysrestaurants.com/assets/live/img/production/detail/menu/lunch-dinner_999-combohs_bacon-cheeseburger-fries.jpg" />
+        <div class="food-content">
+          <h3>Cheeseburger & Fries</h3>
+          <p>Grilled cheeseburger served with crispy golden fries and ketchup on the side.</p>
+          <div class="price">$10.99</div>
+          <button class="btn-add" aria-label="Add Cheeseburger and Fries to cart">Add to Cart</button>
+        </div>
+      </article>
+
+      <article class="food-card" tabindex="0">
+        <img src="https://www.saveur.com/uploads/2019/02/08/OKTZ26NDZCX5LOOQ6COHFROHZ4.jpg?auto=webp" alt="Chocolate layered cake slice" />
+        <div class="food-content">
+          <h3>Chocolate Cake</h3>
+          <p>Rich and moist chocolate cake layered with creamy chocolate frosting.</p>
+          <div class="price">$6.50</div>
+          <button class="btn-add" aria-label="Add Chocolate Cake to cart">Add to Cart</button>
+        </div>
+      </article>
+
+      <article class="food-card" tabindex="0">
+        <img src="https://www.wasabiko.com/wp-content/uploads/2023/02/Wasabiko-Sushi-Poke-Manassas-Virginia-Web-Menu-Header-Platter.jpg" alt="Fresh sushi rolls with wasabi" />
+        <div class="food-content">
+          <h3>Sushi Platter</h3>
+          <p>Assorted sushi rolls with fresh fish, avocado, and served with wasabi and soy sauce.</p>
+          <div class="price">$18.00</div>
+          <button class="btn-add" aria-label="Add Sushi Platter to cart">Add to Cart</button>
+        </div>
+      </article>
+
+      <article class="food-card" tabindex="0">
+        <img src="https://brot.ae/cdn/shop/files/Cappuccino_Final.jpg?v=1745577955" alt="Cup of hot cappuccino with latte art" />
+        <div class="food-content">
+          <h3>Cappuccino</h3>
+          <p>Freshly brewed espresso topped with steamed milk foam and latte art design.</p>
+          <div class="price">$4.25</div>
+          <button class="btn-add" aria-label="Add Cappuccino to cart">Add to Cart</button>
+        </div>
+      </article>
+
+
+     <article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/e9/fd/bb/e9fdbbebe21856b30885de463a9c763f.jpg"
+       alt="Assorted Spanish tapas including olives and jamón" />
+  <div class="food-content">
+    <h3>Tapas Platter</h3>
+    <p>A selection of Spanish-style tapas — olives, cured ham & cheese, all perfect for sharing.</p>
+    <div class="price">$5.00</div>
+    <button class="btn-add" aria-label="Add Tapas Platter to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/f7/02/da/f702dac70c2e47dc9c186a3740948979.jpg"
+       alt="Golden spring rolls with dipping sauce" />
+  <div class="food-content">
+    <h3>Spring Rolls</h3>
+    <p>Crispy fried spring rolls filled with cabbage, carrots, and savory pork — served with dipping sauce.</p>
+    <div class="price">$24.90</div>
+    <button class="btn-add" aria-label="Add Spring Rolls to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/07/10/55/071055249e27852a2e9341ed25fe239d.jpg"
+       alt="Bruschetta topped with tomato and basil" />
+  <div class="food-content">
+    <h3>Bruschetta</h3>
+    <p>Grilled bread slices topped with fresh tomato, basil, garlic, and olive oil — a light Italian starter.</p>
+    <div class="price">$7.25</div>
+    <button class="btn-add" aria-label="Add Bruschetta to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/12/5e/ab/125eabdad3eb03b554d886cdb1f8e849.jpg"
+       alt="Assorted sushi platter" />
+  <div class="food-content">
+    <h3>Sushi Platter</h3>
+    <p>Freshly prepared sushi rolls with a variety of fillings and toppings.</p>
+    <div class="price">$15.00</div>
+    <button class="btn-add" aria-label="Add Sushi Platter to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/cf/59/7c/cf597ccf24fde8a1e57f5bce3bb5fe9c.jpg"
+       alt="Pasta with tomato sauce and basil" />
+  <div class="food-content">
+    <h3>Pasta Primavera</h3>
+    <p>Delicious pasta tossed with seasonal vegetables and a light tomato sauce.</p>
+    <div class="price">$12.50</div>
+    <button class="btn-add" aria-label="Add Pasta Primavera to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/44/a8/c6/44a8c67ba6196514c07b1611c34037f5.jpg"
+       alt="Juicy cheeseburger with lettuce and tomato" />
+  <div class="food-content">
+    <h3>Cheeseburger</h3>
+    <p>Classic cheeseburger with a juicy patty, melted cheese, and fresh toppings.</p>
+    <div class="price">$10.50</div>
+    <button class="btn-add" aria-label="Add Cheeseburger to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/20/84/ba/2084ba91d33900f45cdd3b143204194e.jpg"
+       alt="Fresh garden salad" />
+  <div class="food-content">
+    <h3>Garden Salad</h3>
+    <p>Mixed greens with cherry tomatoes, cucumbers, and a light vinaigrette.</p>
+    <div class="price">$8.00</div>
+    <button class="btn-add" aria-label="Add Garden Salad to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/c4/b5/78/c4b57810a5e6eaf320e17d54ac6d04f6.jpg"
+       alt="Tacos with beef and toppings" />
+  <div class="food-content">
+    <h3>Beef Tacos</h3>
+    <p>Soft tacos filled with seasoned beef, topped with fresh salsa and avocado.</p>
+    <div class="price">$9.50</div>
+    <button class="btn-add" aria-label="Add Beef Tacos to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/9f/a3/fb/9fa3fb041dcb9d3166e6e8fdc1996d96.jpg"
+       alt="Bowl of chicken curry" />
+  <div class="food-content">
+    <h3>Chicken Curry</h3>
+    <p>Spicy chicken curry served with rice and naan bread.</p>
+    <div class="price">$14.00</div>
+    <button class="btn-add" aria-label="Add Chicken Curry to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/a9/b8/a2/a9b8a266a4c061ca6ab6af63cf2e7caa.jpg"
+       alt="Scoop of ice cream" />
+  <div class="food-content">
+    <h3>Ice Cream</h3>
+    <p>Rich and creamy ice cream available in various flavors.</p>
+    <div class="price">$5.00</div>
+    <button class="btn-add" aria-label="Add Ice Cream to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/f0/66/2e/f0662eb9f5596cb8b7aec8fe922d8c8d.jpg"
+       alt="Crepes with strawberries and cream" />
+  <div class="food-content">
+    <h3>Strawberry Crepes</h3>
+    <p>Delicate crepes filled with fresh strawberries and whipped cream.</p>
+    <div class="price">$7.50</div>
+    <button class="btn-add" aria-label="Add Strawberry Crepes to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/7a/40/93/7a4093228a7b370c2f99cb84db8e757e.jpg"
+       alt="Omelette with vegetables" />
+  <div class="food-content">
+    <h3>Vegetable Omelette</h3>
+    <p>Fluffy omelette filled with fresh vegetables and cheese.</p>
+    <div class="price">$9.00</div>
+    <button class="btn-add" aria-label="Add Vegetable Omelette to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/e3/e3/9e/e3e39e682a46a675f090ad8dcec87cf0.jpg"
+       alt="Steak with mashed potatoes" />
+  <div class="food-content">
+    <h3>Steak and Potatoes</h3>
+    <p>Grilled steak served with creamy mashed potatoes and gravy.</p>
+    <div class="price">$20.00</div>
+    <button class="btn-add" aria-label="Add Steak and Potatoes to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/6c/bb/55/6cbb55774c104feec11d6b0e5105f25d.jpg"
+       alt="Slice of cheesecake" />
+  <div class="food-content">
+    <h3>Cheesecake</h3>
+    <p>Rich and creamy cheesecake topped with a berry compote.</p>
+    <div class="price">$6.50</div>
+    <button class="btn-add" aria-label="Add Cheesecake to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/e9/b7/e5/e9b7e596d74785a154e8634f7f841937.jpg"
+       alt="Cup of coffee" />
+  <div class="food-content">
+    <h3>Coffee</h3>
+    <p>Freshly brewed coffee served hot with cream and sugar.</p>
+    <div class="price">$3.00</div>
+    <button class="btn-add" aria-label="Add Coffee to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/38/3c/06/383c062be3dc2e189679b1d33c480a5f.jpg"
+       alt="Cup of tea" />
+  <div class="food-content">
+    <h3>Tea</h3>
+    <p>Refreshing herbal tea served hot or iced.</p>
+    <div class="price">$2.50</div>
+    <button class="btn-add" aria-label="Add Tea to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/34/43/bc/3443bc4ae64ac11df93f5acbbe7cbf29.jpg"
+       alt="Fruit smoothie" />
+  <div class="food-content">
+    <h3>Fruit Smoothie</h3>
+    <p>Delicious smoothie made with fresh fruits and yogurt.</p>
+    <div class="price">$4.50</div>
+    <button class="btn-add" aria-label="Add Fruit Smoothie to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/35/58/33/355833a6f13afc64dfc196767162b6f5.jpg"
+       alt="Stack of pancakes with syrup" />
+  <div class="food-content">
+    <h3>Pancakes</h3>
+    <p>Fluffy pancakes served with maple syrup and butter.</p>
+    <div class="price">$8.00</div>
+    <button class="btn-add" aria-label="Add Pancakes to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/b7/32/84/b732847d2b6dba5ec3f7a43199704574.jpg"
+       alt="Plate of lasagna" />
+  <div class="food-content">
+    <h3>Lasagna</h3>
+    <p>Layers of pasta, meat, and cheese baked to perfection.</p>
+    <div class="price">$13.00</div>
+    <button class="btn-add" aria-label="Add Lasagna to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/12/bf/a2/12bfa26dfe17d870676f2493854623f8.jpg"
+       alt="Bowl of fruit salad" />
+  <div class="food-content">
+    <h3>Fruit Salad</h3>
+    <p>Refreshing mix of seasonal fruits served chilled.</p>
+    <div class="price">$6.00</div>
+    <button class="btn-add" aria-label="Add Fruit Salad to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/f4/42/11/f44211ad388435e4daa83b5a93689bae.jpg"
+       alt="Roast chicken with vegetables" />
+  <div class="food-content">
+    <h3>Roast Chicken</h3>
+    <p>Succulent roast chicken served with seasonal vegetables.</p>
+    <div class="price">$15.50</div>
+    <button class="btn-add" aria-label="Add Roast Chicken to cart">Add to Cart</button>
+  </div>
+</article>
+
+<article class="food-card" tabindex="0">
+  <img src="https://i.pinimg.com/736x/a4/91/58/a49158a8e4c63fcd8bead2bd3953b6a0.jpg"
+       alt="Bowl of vegetable soup" />
+  <div class="food-content">
+    <h3>Vegetable Soup</h3>
+    <p>Hearty vegetable soup made with fresh ingredients.</p>
+    <div class="price">$7.00</div>
+    <button class="btn-add" aria-label="Add Vegetable Soup to cart">Add to Cart</button>
+  </div>
+</article>
+
+
+    </section>
+
+    <!-- Cart Section -->
+    
+  </main>
+
+  <script>
+    // We'll maintain the cart state in an object:
+    const cart = {};
+
+    // Grab references to DOM elements
+    const buttons = document.querySelectorAll('.btn-add');
+    const cartItemsList = document.querySelector('.cart-items');
+    const cartTotalDiv = document.querySelector('.cart-total');
+    const btnClearCart = document.querySelector('.btn-clear');
+
+    // Helper function to format prices
+    function formatPrice(price) {
+      return `$${price.toFixed(2)}`;
+    }
+
+    // Update cart UI
+    function updateCartUI() {
+      cartItemsList.innerHTML = ''; // Clear previous content
+
+      const items = Object.entries(cart);
+
+      if (items.length === 0) {
+        // Empty cart message
+        cartItemsList.innerHTML = '<li>Your cart is empty.</li>';
+        cartTotalDiv.textContent = 'Total: $0.00';
+        btnClearCart.disabled = true;
+        btnClearCart.style.opacity = '0.5';
+        return;
+      }
+
+      btnClearCart.disabled = false;
+      btnClearCart.style.opacity = '1';
+
+      let total = 0;
+
+      items.forEach(([key, item]) => {
+        const li = document.createElement('li');
+        li.classList.add('cart-item');
+        li.textContent = `${item.name} x ${item.quantity}`;
+        const priceSpan = document.createElement('span');
+        const itemTotal = item.price * item.quantity;
+        priceSpan.textContent = formatPrice(itemTotal);
+        li.appendChild(priceSpan);
+        cartItemsList.appendChild(li);
+
+        total += itemTotal;
+      });
+
+      cartTotalDiv.textContent = `Total: ${formatPrice(total)}`;
+    }
+
+    // Event listeners for all Add to Cart buttons
+    buttons.forEach(button => {
+      button.addEventListener('click', e => {
+        const card = e.target.closest('.food-card');
+        if (!card) return;
+
+        const name = card.querySelector('h3').textContent.trim();
+        const priceText = card.querySelector('.price').textContent.trim();
+        // Remove $ sign and parse to float
+        const price = parseFloat(priceText.replace('$', ''));
+
+        if (!cart[name]) {
+          cart[name] = { name, price, quantity: 1 };
+        } else {
+          cart[name].quantity += 1;
+        }
+
+        updateCartUI();
+
+        // Optionally, provide a small animation or confirmation (not implemented here)
+      });
+    });
+
+    // Clear Cart button
+    btnClearCart.addEventListener('click', () => {
+      Object.keys(cart).forEach(key => delete cart[key]);
+      updateCartUI();
+    });
+
+    // Initialize cart UI
+    updateCartUI();
+  
+
+  </script>
+</body>
+</html>

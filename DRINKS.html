@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Foodie Delight - Order Your Favorite Food</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
+  <style>
+    /* Reset and base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #fff8f0;
+      color: #4b3b2b;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+/* ✅ Background video */
+  #bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.35; /* Subtle effect */
+    pointer-events: none;
+  }
+    h1 {
+      margin: 20px 0 40px;
+      font-weight: 700;
+      font-size: 2.8rem;
+      color: #d9480f;
+      text-align: center;
+    }
+
+    main {
+      max-width: 1200px;
+      width: 100%;
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Food cards container */
+    .food-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 25px;
+      flex: 3 1 0;
+    }
+
+    /* Individual food item card */
+    .food-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(217, 72, 15, 0.25);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .food-card:hover,
+    .food-card:focus-within {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px rgba(217, 72, 15, 0.4);
+      outline: none;
+    }
+
+    .food-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 3px solid #d9480f;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .food-content {
+      padding: 15px 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .food-content h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #bc360a;
+    }
+
+    .food-content p {
+      flex-grow: 1;
+      font-size: 0.95rem;
+      color: #6b4c2f;
+      margin-bottom: 15px;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #d9480f;
+      margin-bottom: 12px;
+    }
+
+    /* Add to cart button */
+    .btn-add {
+      background-color: #d9480f;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(217, 72, 15, 0.4);
+    }
+
+    .btn-add:hover,
+    .btn-add:focus {
+      background-color: #bc360a;
+      outline: none;
+      box-shadow: 0 6px 15px rgba(188, 54, 10, 0.7);
+    }
+
+    /* Cart container */
+    .cart {
+      flex: 1 1 320px;
+      background: #fff3e6;
+      border: 2px solid #d9480f;
+      border-radius: 12px;
+      padding: 20px;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+      display: flex;
+      flex-direction: column;
+      max-height: 600px; /* Constrain height of the full cart */
+  overflow: hidden;  /* Hide any overflow beyond this */
+    }
+.cart-items::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cart-items::-webkit-scrollbar-thumb {
+  background-color: #d9480f;
+  border-radius: 10px;
+}
+    .cart h2 {
+      color: #d9480f;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .cart-items {
+      list-style: none;
+      flex-grow: 1;
+      overflow-y: auto;
+       max-height: 100px; /* Allow scrolling for long cart lists */
+  overflow-y: auto;
+  margin-bottom: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      border-bottom: 1px dashed #d9480f;
+      padding-bottom: 9px;
+      font-size: 1rem;
+      color: #5a3a10;
+       list-style: none;
+    }
+
+    .cart-item span {
+      font-weight: 600;
+    }
+    .home:hover{
+    transform: translateY(-1.5px);
+      cursor: pointer;
+      box-shadow: #d9480f;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .home {
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      margin-top: 5px;
+      margin-left: -795px;
+      width: 55px;
+      border-radius: 10px;
+      margin-top: 10px;
+     color:white;
+    background-color: #d9480f;
+    padding: 3px;
+    margin-bottom: 20px;
+    }
+
+    .cart-total {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #bc360a;
+      text-align: right;
+      margin-bottom: 15px;
+    }
+
+    .btn-clear {
+      background-color: #bc360a;
+      color: white;
+      border: none;
+      font-weight: 600;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      align-self: center;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(188, 54, 10, 0.6);
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-clear:hover,
+    .btn-clear:focus {
+      background-color: #a73707;
+      outline: none;
+      box-shadow: 0 6px 18px rgba(167, 55, 7, 0.8);
+    }
+
+    /* Scrollbar for cart items */
+    .cart-items::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    .cart-items::-webkit-scrollbar-thumb {
+      background: #d9480f;
+      border-radius: 10px;
+       max-height: 100px; 
+        overflow-y: auto;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .div-cart {
+           width: 550px;
+  margin-left: 650px;
+  margin-top: -150px;
+  padding-left: 150px;
+  padding-bottom: 10px;
+  /* Remove height constraint from container */
+     
+    }
+    .foodie{
+     font-family:'Courier New', Courier, monospace;
+    font-style: italic;
+    font-size: 70px;
+    padding-right: 350px;
+    }
+  /* ✅ Background video */
+  #bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.35; /* Subtle effect */
+    pointer-events: none;
+  }
+    /* Responsive adjustments */
+    @media (max-width: 950px) {
+      main {
+        flex-direction: column;
+        align-items: center;
+      }
+      .cart {
+        position: static;
+        max-width: 100%;
+        margin-top: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <video id="bg-video" autoplay muted loop playsinline>
+  <source src="Bg vid.mp4.mp4" type="video/mp4" />
+  Your browser does not support HTML5 video.
+</video>
+
+  <h1 class="foodie">DRINKS</h1>
+  <div class="div-cart">
+  <aside class="cart" aria-label="Shopping cart">
+    <h2>Your Cart</h2>
+    <ul class="cart-items" aria-live="polite" aria-relevant="additions removals" aria-atomic="true">
+      <li>Your cart is empty.</li>
+    </ul>
+    <div class="cart-total" aria-live="polite" aria-atomic="true">Total: $0.00</div>
+    <button class="btn-clear" aria-label="Clear cart">Clear Cart</button>
+  </aside>
+<a class="home" href="LANDING PAGE.html">Home</a>
+
+
+</div>
+
+<main>
+  <!-- Drink items container -->
+  <section class="food-container" aria-label="Available drinks">
+
+    <article class="food-card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1612198723986-cb125f2b8a8a?auto=format&fit=crop&w=800&q=80" alt="Iced coffee with cream swirl" />
+      <div class="food-content">
+        <h3>Iced Coffee</h3>
+        <p>Chilled coffee over ice, swirled with cream and sweet syrup. Perfect summer pick-me-up.</p>
+        <div class="price">$3.99</div>
+        <button class="btn-add" aria-label="Add Iced Coffee to cart">Add to Cart</button>
+      </div>
+    </article>
+
+    <article class="food-card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1600180758890-6c86140b391c?auto=format&fit=crop&w=800&q=80" alt="Freshly squeezed orange juice" />
+      <div class="food-content">
+        <h3>Orange Juice</h3>
+        <p>Freshly squeezed orange juice packed with vitamin C and a burst of citrus flavor.</p>
+        <div class="price">$2.75</div>
+        <button class="btn-add" aria-label="Add Orange Juice to cart">Add to Cart</button>
+      </div>
+    </article>
+
+    <article class="food-card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1547592166-23ac45744c51?auto=format&fit=crop&w=800&q=80" alt="Glass of red wine" />
+      <div class="food-content">
+        <h3>Red Wine</h3>
+        <p>Elegant glass of rich, dry red wine — ideal for relaxing evenings or fine dining.</p>
+        <div class="price">$8.00</div>
+        <button class="btn-add" aria-label="Add Red Wine to cart">Add to Cart</button>
+      </div>
+    </article>
+
+    <article class="food-card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1572568563369-2b8b10421c33?auto=format&fit=crop&w=800&q=80" alt="Cold glass of cola" />
+      <div class="food-content">
+        <h3>Cola</h3>
+        <p>Classic fizzy cola served chilled. Refreshing and bubbly with a nostalgic twist.</p>
+        <div class="price">$1.99</div>
+        <button class="btn-add" aria-label="Add Cola to cart">Add to Cart</button>
+      </div>
+    </article>
+
+    <article class="food-card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80" alt="Colorful fruit smoothie" />
+      <div class="food-content">
+        <h3>Fruit Smoothie</h3>
+        <p>Blended berries, banana, and yogurt — a healthy and energizing drink option.</p>
+        <div class="price">$4.50</div>
+        <button class="btn-add" aria-label="Add Fruit Smoothie to cart">Add to Cart</button>
+      </div>
+    </article>
+
+    <article class="food-card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1615475981670-77a4ff9a5a16?auto=format&fit=crop&w=800&q=80" alt="Glass of sparkling water with lemon" />
+      <div class="food-content">
+        <h3>Sparkling Water</h3>
+        <p>Chilled sparkling mineral water with a slice of lemon — crisp and hydrating.</p>
+        <div class="price">$1.50</div>
+        <button class="btn-add" aria-label="Add Sparkling Water to cart">Add to Cart</button>
+      </div>
+    </article>
+
+    <article class="food-card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1605479405092-f35a24b2411f?auto=format&fit=crop&w=800&q=80" alt="Glass of mojito with mint" />
+      <div class="food-content">
+        <h3>Mojito</h3>
+        <p>Refreshing cocktail with lime, mint, and soda — served over crushed ice.</p>
+        <div class="price">$6.25</div>
+        <button class="btn-add" aria-label="Add Mojito to cart">Add to Cart</button>
+      </div>
+    </article>
+
+    <article class="food-card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1590080876598-e4fdbe0d89aa?auto=format&fit=crop&w=800&q=80" alt="Mango lassi in a traditional glass" />
+      <div class="food-content">
+        <h3>Mango Lassi</h3>
+        <p>Indian-style yogurt drink made with ripe mangoes and a touch of cardamom.</p>
+        <div class="price">$3.75</div>
+        <button class="btn-add" aria-label="Add Mango Lassi to cart">Add to Cart</button>
+      </div>
+    </article>
+
+    <article class="food-card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1590080876624-e4b6bd49f62d?auto=format&fit=crop&w=800&q=80" alt="Glass of lemonade with mint" />
+      <div class="food-content">
+        <h3>Lemonade</h3>
+        <p>Homemade lemonade with fresh lemon juice, mint leaves, and a touch of honey.</p>
+        <div class="price">$2.25</div>
+        <button class="btn-add" aria-label="Add Lemonade to cart">Add to Cart</button>
+      </div>
+    </article>
+
+    <article class="food-card" tabindex="0">
+      <img src="https://images.unsplash.com/photo-1608460577321-d9b51f3b1ca5?auto=format&fit=crop&w=800&q=80" alt="Glass of craft beer with foam" />
+      <div class="food-content">
+        <h3>Craft Beer</h3>
+        <p>Locally brewed craft beer with a golden hue and smooth flavor profile.</p>
+        <div class="price">$5.75</div>
+        <button class="btn-add" aria-label="Add Craft Beer to cart">Add to Cart</button>
+      </div>
+    </article>
+
+  </section>
+</main>
+
+
+    </section>
+
+    <!-- Cart Section -->
+    
+  </main>
+
+  <script>
+    // We'll maintain the cart state in an object:
+    const cart = {};
+
+    // Grab references to DOM elements
+    const buttons = document.querySelectorAll('.btn-add');
+    const cartItemsList = document.querySelector('.cart-items');
+    const cartTotalDiv = document.querySelector('.cart-total');
+    const btnClearCart = document.querySelector('.btn-clear');
+
+    // Helper function to format prices
+    function formatPrice(price) {
+      return `$${price.toFixed(2)}`;
+    }
+
+    // Update cart UI
+    function updateCartUI() {
+      cartItemsList.innerHTML = ''; // Clear previous content
+
+      const items = Object.entries(cart);
+
+      if (items.length === 0) {
+        // Empty cart message
+        cartItemsList.innerHTML = '<li>Your cart is empty.</li>';
+        cartTotalDiv.textContent = 'Total: $0.00';
+        btnClearCart.disabled = true;
+        btnClearCart.style.opacity = '0.5';
+        return;
+      }
+
+      btnClearCart.disabled = false;
+      btnClearCart.style.opacity = '1';
+
+      let total = 0;
+
+      items.forEach(([key, item]) => {
+        const li = document.createElement('li');
+        li.classList.add('cart-item');
+        li.textContent = `${item.name} x ${item.quantity}`;
+        const priceSpan = document.createElement('span');
+        const itemTotal = item.price * item.quantity;
+        priceSpan.textContent = formatPrice(itemTotal);
+        li.appendChild(priceSpan);
+        cartItemsList.appendChild(li);
+
+        total += itemTotal;
+      });
+
+      cartTotalDiv.textContent = `Total: ${formatPrice(total)}`;
+    }
+
+    // Event listeners for all Add to Cart buttons
+    buttons.forEach(button => {
+      button.addEventListener('click', e => {
+        const card = e.target.closest('.food-card');
+        if (!card) return;
+
+        const name = card.querySelector('h3').textContent.trim();
+        const priceText = card.querySelector('.price').textContent.trim();
+        // Remove $ sign and parse to float
+        const price = parseFloat(priceText.replace('$', ''));
+
+        if (!cart[name]) {
+          cart[name] = { name, price, quantity: 1 };
+        } else {
+          cart[name].quantity += 1;
+        }
+
+        updateCartUI();
+
+        // Optionally, provide a small animation or confirmation (not implemented here)
+      });
+    });
+
+    // Clear Cart button
+    btnClearCart.addEventListener('click', () => {
+      Object.keys(cart).forEach(key => delete cart[key]);
+      updateCartUI();
+    });
+
+    // Initialize cart UI
+    updateCartUI();
+  
+
+  </script>
+</body>
+</html>
