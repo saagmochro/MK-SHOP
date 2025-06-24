@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MK SHOP - Your Online Shopping Destination</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      line-height: 1.6;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 20px 40px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #2C3E50;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #2C3E50;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    nav ul li {
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    nav ul li a {
+      color: #2C3E50;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      background-color: #2C3E50;
+      color: white;
+    }
+
+    .hero {
+      background: url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1400&q=80') no-repeat center center/cover;
+      height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: rgba(44, 62, 80, 0.7);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    .btn-primary {
+      background-color: #27ae60;
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 6px 12px rgba(39, 174, 96, 0.5);
+    }
+
+    .btn-primary:hover {
+      background-color: #219150;
+      box-shadow: 0 8px 16px rgba(33, 145, 80, 0.7);
+    }
+
+    .categories {
+      max-width: 1200px;
+      margin: 60px auto 40px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 30px;
+    }
+
+    .category-card {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .category-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
+
+    .category-card img {
+      height: 200px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .category-card h3 {
+      padding: 20px;
+      font-size: 1.5rem;
+      color: #2C3E50;
+    }
+
+    .offers {
+      background-color: #27ae60;
+      color: white;
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    .offers h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .offers p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto 30px;
+    }
+
+    .testimonials {
+      max-width: 1000px;
+      margin: 60px auto 40px;
+      padding: 0 20px;
+    }
+
+    .testimonials h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 40px;
+      color: #2C3E50;
+    }
+
+    .testimonial-card {
+      background-color: white;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .testimonial-img {
+      flex-shrink: 0;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #27ae60;
+    }
+
+    .testimonial-content {
+      flex: 1;
+    }
+
+    .testimonial-content p {
+      font-style: italic;
+      margin-bottom: 10px;
+      color: #555;
+    }
+
+    .testimonial-content h4 {
+      font-weight: 700;
+      color: #27ae60;
+    }
+
+    .newsletter {
+      background-color: #f0f0f0;
+      padding: 40px 20px;
+      text-align: center;
+      border-radius: 12px;
+      max-width: 700px;
+      margin: 0 auto 60px;
+    }
+
+    .newsletter h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .newsletter p {
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      color: #555;
+    }
+
+    .newsletter form {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .newsletter input[type="email"] {
+      padding: 15px 20px;
+      font-size: 1rem;
+      border: 2px solid #27ae60;
+      border-radius: 50px;
+      flex: 1 1 300px;
+      max-width: 400px;
+      outline-color: #27ae60;
+    }
+
+    .newsletter button {
+      background-color: #27ae60;
+      border: none;
+      color: white;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 50px;
+      flex-shrink: 0;
+      transition: background-color 0.3s ease;
+    }
+
+    .newsletter button:hover {
+      background-color: #219150;
+    }
+
+    .whatsapp-contact {
+      display: inline-block;
+      background-color: #25D366;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .whatsapp-contact:hover {
+      background-color: #1ebd5b;
+    }
+
+    footer {
+      background-color: #2C3E50;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    footer .social-icons {
+      margin-bottom: 20px;
+    }
+
+    footer .social-icons a {
+      display: inline-block;
+      margin: 0 15px;
+      font-size: 1.5rem;
+      color: white;
+      transition: color 0.3s ease;
+    }
+
+    footer .social-icons a:hover {
+      color: #27ae60;
+    }
+
+    footer p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    @media(max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      nav ul {
+        display: none;
+        flex-direction: column;
+        background-color: #fff;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        padding: 10px 0;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+
+      nav ul.open {
+        display: flex;
+      }
+
+      nav ul li {
+        padding: 10px 20px;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .testimonial-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .newsletter form {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .newsletter button,
+      .newsletter input[type="email"] {
+        width: 100%;
+        max-width: none;
+      }
+    }
+
+    @media(max-width: 480px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .btn-primary {
+        width: 100%;
+        max-width: 300px;
+        padding: 15px 10px;
+      }
+    }
+  </style>
+
+  <script>
+    function toggleMenu() {
+      document.querySelector("nav ul").classList.toggle("open");
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo" aria-label="ShopEase Logo" tabindex="0">MK SHOP</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <nav aria-label="Primary Navigation">
+      <ul>
+        <li><a href="#categories">Categories</a></li>
+        <li><a href="#offers">Special Offers</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#newsletter">Newsletter</a></li>
+        <li><a href="#footer">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" role="img" aria-label="Shopping bags and products background">
+    <div class="hero-content">
+      <h1>Discover Amazing Deals on Quality Products</h1>
+      <p>Your one-stop shop for all your needs. Fast delivery & easy returns.</p>
+      <a href="#categories" class="btn-primary">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="categories" id="categories" aria-label="Product Categories">
+    <!-- Same content as before for categories -->
+    <!-- ... -->
+  </section>
+
+  <!-- Offers -->
+  <section class="offers" id="offers" aria-label="Special Offers">
+    <h2>Exclusive Deals Just For You!</h2>
+    <p>Up to 50% off on selected items this weekend only. Don't miss out on our amazing discounts.</p>
+    <a href="#categories" class="btn-primary">Browse Offers</a>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials" id="testimonials" aria-label="Customer Testimonials">
+    <!-- Same testimonial content -->
+  </section>
+
+  <!-- Newsletter -->
+  <section class="newsletter" id="newsletter" aria-label="Newsletter Subscription">
+    <h2>Stay Updated!</h2>
+    <p>Subscribe to our newsletter and get the latest updates and exclusive offers delivered to your inbox.</p>
+    <form action="https://formspree.io/f/mgvynekw" method="POST">
+      <input type="email" name="email" placeholder="Enter your email address" required />
+      <button type="submit">Subscribe</button>
+      <a href="https://wa.me/254112157020" class="whatsapp-contact" target="_blank" aria-label="Chat with us on WhatsApp">
+        📱 Contact us on WhatsApp
+      </a>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer">
+    <div class="social-icons" aria-label="Social media links">
+      <a href="#">🐦</a>
+      <a href="#">📸</a>
+      <a href="#">📘</a>
+      <a href="#">🔗</a>
+    </div>
+    <p>&copy; 2024 Mkshop. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
